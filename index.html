@@ -51,9 +51,11 @@
 <p>Paste the following in a PowerShell prompt and press enter twice to run:</p>
 
 <pre><code>Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -recurse |
-Get-ItemProperty -name Version -EA 0 |
+Get-ItemProperty -name Version, release -EA 0 | 
 Where { $_.PSChildName -match '^(?!S)\p{L}'} |
-Select PSChildName, Version
+Select PSChildName, Version, Release,`
+@{Label=".NET 4.5.1+";Expression={"{0:N}" -f ($_.Release -gt 378389)}} |
+Format-Table -AutoSize
 </code></pre>
 
 <p>Or download and run this totally safe .NET 2.0 executable which will do essentially the same thing as the PowerShell script above: <a href="http://dl.isdotnetinstalled.com/DotNetVersionList.exe">DotNetVersionList.exe</a> (<a href="https://www.virustotal.com/en/file/dccd119ca87cd7a68546039f3294a1a5b6b71f0c904c97007c4b56b174b0b319/analysis/1390468602/">VirusTotal Results</a>)</p>
